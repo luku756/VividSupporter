@@ -32,11 +32,15 @@ class Symbols(Enum):
     random_mark = '마크랜덤'
 
 
-class Level:
+class Level(Enum):
     bronze = '브론즈'
     silver = '실버'
     gold = '골드'
 
+
+class ButtonState(Enum):
+    pressed = 0
+    unpressed = 1
 
 class Units:
     unit_list = [
@@ -99,7 +103,14 @@ class Units:
 
     @staticmethod
     def get_unit_list():
-        return Units.unit_list
+
+        lists = []
+        for unit in Units.unit_list:
+            u = unit.copy()
+            u.append(ButtonState.unpressed)
+            lists.append(u)
+
+        return lists
 
     @staticmethod
     def get_symbol_list():

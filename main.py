@@ -46,7 +46,7 @@ def create_gui():
     window.after(1, lambda: window.focus_force())
     window.attributes('-topmost', 0)
 
-    window.title("비비드 나이트 도우미 by Redwing")
+    window.title("비비드 나이트 도우미 by Redwing (v 1.0.0)")
     window.geometry("950x660+500+200")
     # window.geometry("800x710-2500+700")
     # window.resizable(False, False)
@@ -96,12 +96,9 @@ def create_gui():
     # 심볼과 해당 심볼 버튼 상태
     symbol_buttons = {}
 
-
     # 심볼 목록 표시
     def display_symbols():
-
         for s in Symbols:
-
             tag_new_btn = tkinter.Button(symbol_list_frame, overrelief="groove", image=symbol_images[s], text=s.value,
                                          command=partial(symbol_click, s))
 
@@ -115,21 +112,35 @@ def create_gui():
             symbol_list_window.window_create("insert", window=tag_new_btn, padx=10, pady=10)
             symbol_list_window.configure(state="disabled")
 
-
     display_symbols()
 
-
-    # 심볼 목록 표시
+    # 유닛 목록을 표시할 윈도우 생성
     unit_list_frame = tkinter.LabelFrame(window, text="선택된 심볼의 유닛 목록")
     unit_list_frame.pack(side='top', fill="both", padx=10, pady=10)
 
-    # 심볼 표시
     unit_list_window = tk.Text(unit_list_frame, wrap="word", height='40',  bg='SystemButtonFace', yscrollcommand=lambda *args: unit_vsb.set(*args))
     unit_vsb = tk.Scrollbar(unit_list_frame, command=unit_list_window.yview)
     unit_vsb.pack(side="right", fill="y")
     unit_list_window.pack(side="left", fill="both", expand=True)
 
-    # 현재 선택 상태에 맞는 캐릭터 목록을 출력한다.
+
+    # 유닛 클릭 이벤트. 유닛 화면을 비활성화한다.
+    # 버튼을 누르면 눌린 상태를 유지하고, 그 상태에서 다시 누르면 원상복구한다.
+    def unit_click(selected_symbol):
+        print('as')
+        # print(selected_symbol)
+        # if symbol_buttons[selected_symbol]['state'] == ButtonState.unpressed:
+        #     symbol_buttons[selected_symbol]['button']['background'] = 'gray'
+        #     symbol_buttons[selected_symbol]['button'].config(relief=SUNKEN)  # 눌린 상태 유지
+        #     symbol_buttons[selected_symbol]['state'] = ButtonState.pressed
+        # else:
+        #     symbol_buttons[selected_symbol]['button'].config(relief=RAISED)  # 눌린 상태 해제
+        #     symbol_buttons[selected_symbol]['state'] = ButtonState.unpressed
+        #     symbol_buttons[selected_symbol]['button']['background'] = 'SystemButtonFace'
+        # 현재 ui 갱신
+        # display_right_characters()
+
+    # 현재 선택 상태에 맞는 유닛 목록을 출력한다.
     def display_right_characters():
         unit_list = Units.get_unit_list()
 
@@ -149,33 +160,37 @@ def create_gui():
                 elif unit[1] == Level.gold:
                     color = 'gold'
 
-                frame = tkinter.Frame(unit_list_frame, bg=color)
+                # 전체 프레임
+                unit_frame = tkinter.Frame(unit_list_frame,  bg=color #, command=partial(unit_click, s)
+                                            )
 
                 # 패딩 크기, 사실상 테두리 크기
                 pad_size = 4
 
-                tag_new_btn = tkinter.Label(frame, image=unit_images[unit[0]], text=unit[0])
-                tag_new_btn.pack(side='top', pady=(pad_size, 0), padx=pad_size)
+                unit_btn = tkinter.Label(unit_frame, image=unit_images[unit[0]], text=unit[0])
+                unit_btn.pack(side='top', pady=(pad_size, 0), padx=pad_size)
+                Tooltip(unit_btn, text=str(unit[0]))
 
-
-                symbol_frame = tkinter.Frame(frame)
+                # 유닛이 지닌 심볼 표시
+                symbol_frame = tkinter.Frame(unit_frame)
 
                 symbol_first = tkinter.Label(symbol_frame, image=symbol_images[unit[2]])
                 symbol_first.pack(side='left')
+                Tooltip(symbol_first, text=str(unit[2].value))
 
                 symbol_second = tkinter.Label(symbol_frame, image=symbol_images[unit[3]])
                 symbol_second.pack(side='right')
+                Tooltip(symbol_second, text=str(unit[3].value))
 
                 symbol_frame.pack(side='top', pady=(0, pad_size), padx=pad_size, fill="both", expand=True)
 
-                Tooltip(frame, text=str(unit))
 
                 # 관리할 상태 변수
                 # symbol_buttons[s] = {'button': tag_new_btn, 'state': ButtonState.unpressed}
 
                 # text 위젯에 추가
                 unit_list_window.configure(state="normal")
-                unit_list_window.window_create("insert", window=frame, padx=10, pady=10)
+                unit_list_window.window_create("insert", window=unit_frame, padx=10, pady=10)
                 unit_list_window.configure(state="disabled")
 
 
