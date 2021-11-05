@@ -6,6 +6,8 @@
 속성 심볼을 선택하면 해당 심볼을 지닌 유닛의 목록을 보여줍니다.
 (현재 - v 1.0.0 에서 아멜리만 지원)
 
+[파일 다운로드](https://github.com/luku756/VividSupporter/raw/master/dist/%EB%B9%84%EB%B9%84%EB%93%9C%20%EB%82%98%EC%9D%B4%ED%8A%B8%20%EC%84%9C%ED%8F%AC%ED%84%B0.exe)
+
 # 사용 예시
 
 상단에 나타난 속성 심볼 선택 시 해당 심볼 유닛들의 교집합을 아래에 나타냅니다.
