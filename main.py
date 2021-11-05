@@ -91,7 +91,7 @@ def create_gui():
             symbol_buttons[selected_symbol]['state'] = ButtonState.unpressed
             symbol_buttons[selected_symbol]['button']['background'] = 'SystemButtonFace'
         # 현재 ui 갱신
-        display_right_characters()
+        display_right_units()
 
 
     # 랜덤 유닛의 속성 선택
@@ -103,21 +103,21 @@ def create_gui():
 
     # 랜덤유닛의 옵션 설정 기능 추가
     def add_random_unit(upper_widget, name):
-        def click_menu(clicked, select_type, btn):
-            print(clicked)
-            print(select_type)
-            btn.config(image=symbol_images[clicked.value])
+        def click_menu(clicked, symbol_type, btn, unit_name):
+            btn.config(image=symbol_images[clicked.value])  # 이미지 변경
+            Units.set_random_unit_state(unit_name, symbol_type, clicked.value)  # 상태 결정
+            display_right_units() # 화면 갱신
 
-
-        def create_menu(widget):
+        # 메뉴를 만들어 심볼 선택
+        def create_menu(widget, unit_name):
             menu = tkinter.Menu(widget, tearoff=0)
             print(widget['text'])
             if widget['text'] == '컬러랜덤':
                 for s in ColorSymbols:
-                    menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget))
+                    menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget, unit_name))
             else:
                 for s in MarkSymbols:
-                    menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget))
+                    menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget, unit_name))
 
             widget["menu"] = menu
 
@@ -127,15 +127,15 @@ def create_gui():
         symbol_1 = tkinter.Menubutton(te, image=symbol_images[Symbols.random_color], text=Symbols.random_color.value,
                                       relief="raised", direction="right")
         symbol_1.pack(side="left")
-        create_menu(symbol_1)
+        create_menu(symbol_1, name)
 
         symbol_2 = tkinter.Menubutton(te, image=symbol_images[Symbols.random_mark], text=Symbols.random_mark.value,
                                       relief="raised", direction="right")
         symbol_2.pack(side="right")
-        create_menu(symbol_2)
+        create_menu(symbol_2, name)
         te.pack(side="top", padx=10, pady=10)
 
-    add_random_unit(random_unit_select_symbol, '궁정화가 지르콘')
+    add_random_unit(random_unit_select_symbol, '궁정 화가 지르콘')
     add_random_unit(random_unit_select_symbol, '점성술사 래브라')
 
     # 심볼 클릭 이벤트. 아래에 디스플레이 되는 목록을 변경한다.
@@ -151,7 +151,7 @@ def create_gui():
             symbol_buttons[selected_symbol]['state'] = ButtonState.unpressed
             symbol_buttons[selected_symbol]['button']['background'] = 'SystemButtonFace'
         # 현재 ui 갱신
-        display_right_characters()
+        display_right_units()
 
     # 심볼과 해당 심볼 버튼 상태
     symbol_buttons = {}
@@ -185,7 +185,7 @@ def create_gui():
     unit_list_window.pack(side="left", fill="both", expand=True)
 
     # 현재 선택 상태에 맞는 유닛 목록을 출력한다.
-    def display_right_characters():
+    def display_right_units():
         unit_list = Units.get_unit_list()
 
         unit_list_window.configure(state="normal")

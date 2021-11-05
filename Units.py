@@ -127,13 +127,22 @@ class Units:
 
     ]
 
+    random_unit_list = [
+        ["궁정 화가 지르콘", Level.bronze, Symbols.random_color, Symbols.random_mark],
+        ["점성술사 래브라", Level.silver, Symbols.random_color, Symbols.random_mark]
+    ]
+
     @staticmethod
     def get_unit_list():
 
         lists = []
         for unit in Units.unit_list:
             u = unit.copy()
-            u.append(ButtonState.unpressed)
+            if u[0] == Units.random_unit_list[0][0]:
+                u = Units.random_unit_list[0].copy()
+            elif u[0] == Units.random_unit_list[1][0]:
+                u = Units.random_unit_list[1].copy()
+            # u.append(ButtonState.unpressed)
             lists.append(u)
 
         return lists
@@ -141,3 +150,14 @@ class Units:
     @staticmethod
     def get_symbol_list():
         return Symbols
+
+    @staticmethod
+    def set_random_unit_state(unit_name, symbol_type, new_symbol):
+
+        for unit in Units.random_unit_list:
+
+            if unit_name == unit[0]:
+                if symbol_type == '컬러랜덤':
+                    unit[2] = new_symbol
+                else:
+                    unit[3] = new_symbol
