@@ -1,4 +1,4 @@
-# VividSupporter
+# Vivid Knight Supporter
 비비드 나이트 서포트 프로그램
 
 스팀 게임 Vivid Knight (<https://store.steampowered.com/app/1569090/Vivid_Knight/>) 의 서포트 프로그램입니다.
