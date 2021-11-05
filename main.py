@@ -1,6 +1,6 @@
 from functools import partial
 
-from Units import Units, Symbols
+from Units import Units, Symbols, Level
 
 import os
 from Tootip import Tooltip
@@ -51,6 +51,23 @@ def create_gui():
     # window.geometry("800x710-2500+700")
     # window.resizable(False, False)
 
+
+    # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
+    symbol_images = {}
+    for s in Symbols:
+        img_path = f'resource\\symbols\\{s.value}.png'
+        symbol_images[s] = PhotoImage(file=img_path)
+
+    # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
+    unit_images = {}
+    unit_list = Units.get_unit_list()
+    for unit in unit_list:
+        img_path = f'resource\\units\\{unit[0]}.png'
+
+        # Resizing image to fit on button
+        # photoimage = PhotoImage(file=img_path).subsample(2, 2)
+        unit_images[unit[0]] = PhotoImage(file=img_path)
+
     # 심볼 목록 표시
     symbol_list_frame = tkinter.LabelFrame(window, text="심볼 선택")
     symbol_list_frame.pack(side='top', fill="both", padx=10, pady=10)
@@ -79,11 +96,6 @@ def create_gui():
     # 심볼과 해당 심볼 버튼 상태
     symbol_buttons = {}
 
-    # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
-    symbol_images = {}
-    for s in Symbols:
-        img_path = f'resource\\symbols\\{s.value}.png'
-        symbol_images[s] = PhotoImage(file=img_path)
 
     # 심볼 목록 표시
     def display_symbols():
@@ -108,41 +120,63 @@ def create_gui():
 
 
     # 심볼 목록 표시
-    character_list_frame = tkinter.LabelFrame(window, text="선택된 심볼의 유닛 목록")
-    character_list_frame.pack(side='top', fill="both", padx=10, pady=10)
+    unit_list_frame = tkinter.LabelFrame(window, text="선택된 심볼의 유닛 목록")
+    unit_list_frame.pack(side='top', fill="both", padx=10, pady=10)
 
     # 심볼 표시
-    character_list_window = tk.Text(character_list_frame, wrap="word", bg='SystemButtonFace', yscrollcommand=lambda *args: character_vsb.set(*args))
-    character_vsb = tk.Scrollbar(character_list_frame, command=character_list_window.yview)
-    character_vsb.pack(side="right", fill="y")
-    character_list_window.pack(side="left", fill="both", expand=True)
+    unit_list_window = tk.Text(unit_list_frame, wrap="word", height='40',  bg='SystemButtonFace', yscrollcommand=lambda *args: unit_vsb.set(*args))
+    unit_vsb = tk.Scrollbar(unit_list_frame, command=unit_list_window.yview)
+    unit_vsb.pack(side="right", fill="y")
+    unit_list_window.pack(side="left", fill="both", expand=True)
 
     # 현재 선택 상태에 맞는 캐릭터 목록을 출력한다.
     def display_right_characters():
         unit_list = Units.get_unit_list()
 
-        character_list_window.configure(state="normal")
-        character_list_window.delete("1.0", "end")
-        character_list_window.configure(state="disabled")
+        unit_list_window.configure(state="normal")
+        unit_list_window.delete("1.0", "end")
+        unit_list_window.configure(state="disabled")
 
         for unit in unit_list:
             # 첫번째 심볼, 혹은 두번째 심볼이 클릭된 상태
             if symbol_buttons[unit[2]]['state'] == ButtonState.pressed or symbol_buttons[unit[3]]['state'] == ButtonState.pressed:
 
-                tag_new_btn = tkinter.Button(character_list_frame, overrelief="groove", #image=symbol_images[s],
-                                             text=unit[0],
-                                             #command=partial(symbol_click, s)
-                                             )
+                # 등급에 따른 색상 테두리
+                if unit[1] == Level.bronze:
+                    color = '#CD7F32'
+                elif unit[1] == Level.silver:
+                    color = 'silver'
+                elif unit[1] == Level.gold:
+                    color = 'gold'
 
-                Tooltip(tag_new_btn, text=str(unit))
+                frame = tkinter.Frame(unit_list_frame, bg=color)
+
+                # 패딩 크기, 사실상 테두리 크기
+                pad_size = 4
+
+                tag_new_btn = tkinter.Label(frame, image=unit_images[unit[0]], text=unit[0])
+                tag_new_btn.pack(side='top', pady=(pad_size, 0), padx=pad_size)
+
+
+                symbol_frame = tkinter.Frame(frame)
+
+                symbol_first = tkinter.Label(symbol_frame, image=symbol_images[unit[2]])
+                symbol_first.pack(side='left')
+
+                symbol_second = tkinter.Label(symbol_frame, image=symbol_images[unit[3]])
+                symbol_second.pack(side='right')
+
+                symbol_frame.pack(side='top', pady=(0, pad_size), padx=pad_size, fill="both", expand=True)
+
+                Tooltip(frame, text=str(unit))
 
                 # 관리할 상태 변수
                 # symbol_buttons[s] = {'button': tag_new_btn, 'state': ButtonState.unpressed}
 
                 # text 위젯에 추가
-                character_list_window.configure(state="normal")
-                character_list_window.window_create("insert", window=tag_new_btn, padx=10, pady=10)
-                character_list_window.configure(state="disabled")
+                unit_list_window.configure(state="normal")
+                unit_list_window.window_create("insert", window=frame, padx=10, pady=10)
+                unit_list_window.configure(state="disabled")
 
 
     # 메인루프 시작

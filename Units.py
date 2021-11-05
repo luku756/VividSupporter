@@ -64,7 +64,7 @@ class Units:
         ["사서 아메지스트", Level.bronze, Symbols.purple, Symbols.magician],
         ["가면의 제트", Level.bronze, Symbols.black, Symbols.crown],
 
-        ["닌자 쿄고쿠", Level.silver, Symbols.red, Symbols.plum],
+        ["닌자 코교쿠", Level.silver, Symbols.red, Symbols.plum],
         ["숲의 주민 젬실리카", Level.silver, Symbols.green, Symbols.forest],
         ["금강 기사 다이아", Level.silver, Symbols.white, Symbols.justice],
         ["쌍도 로도", Level.silver, Symbols.pink, Symbols.justice],
