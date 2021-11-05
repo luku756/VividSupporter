@@ -47,7 +47,7 @@ def create_gui():
     window.attributes('-topmost', 0)
 
     window.title("비비드 나이트 도우미 by Redwing (v 1.0.0)")
-    window.geometry("950x660+500+200")
+    window.geometry("1100x800+500+100")
     # window.geometry("800x710-2500+700")
     # window.resizable(False, False)
 
@@ -69,34 +69,23 @@ def create_gui():
         unit_images[unit[0]] = PhotoImage(file=img_path)
 
 
+    upper_frame = tkinter.Frame(window)
+    upper_frame.pack(side="top")
 
     # 심볼 목록 표시
-    symbol_list_frame = tkinter.LabelFrame(window, text="심볼 선택")
-    symbol_list_frame.pack(side='top', fill="both", padx=10, pady=10)
+    symbol_list_frame = tkinter.LabelFrame(upper_frame, text="심볼 선택")
+    symbol_list_frame.pack(side='left', fill="both", padx=10, pady=10)
 
     # 심볼 표시
-    symbol_list_window = tk.Text(symbol_list_frame, wrap="word", height='10', bg='SystemButtonFace', yscrollcommand=lambda *args: symbol_vsb.set(*args))
+    symbol_list_window = tk.Text(symbol_list_frame, wrap="word", width='100', height='15', bg='SystemButtonFace', yscrollcommand=lambda *args: symbol_vsb.set(*args))
     symbol_vsb = tk.Scrollbar(symbol_list_frame, command=symbol_list_window.yview)
     symbol_vsb.pack(side="right", fill="y")
     symbol_list_window.pack(side="left", fill="both", expand=True)
 
-    def random_symbol_click(selected_symbol):
-        # print(selected_symbol)
-        if symbol_buttons[selected_symbol]['state'] == ButtonState.unpressed:
-            symbol_buttons[selected_symbol]['button']['background'] = 'gray'
-            symbol_buttons[selected_symbol]['button'].config(relief=SUNKEN)  # 눌린 상태 유지
-            symbol_buttons[selected_symbol]['state'] = ButtonState.pressed
-        else:
-            symbol_buttons[selected_symbol]['button'].config(relief=RAISED)  # 눌린 상태 해제
-            symbol_buttons[selected_symbol]['state'] = ButtonState.unpressed
-            symbol_buttons[selected_symbol]['button']['background'] = 'SystemButtonFace'
-        # 현재 ui 갱신
-        display_right_units()
-
 
     # 랜덤 유닛의 속성 선택
-    random_unit_select_symbol = tkinter.LabelFrame(window,  text="랜덤유닛 속성", width='5')
-    random_unit_select_symbol.pack(side="top")
+    random_unit_select_symbol = tkinter.LabelFrame(upper_frame,  text="랜덤유닛 속성", width='5')
+    random_unit_select_symbol.pack(side="right")
 
     # label = tkinter.Label(random_unit_select_symbol, text="궁정화가 지르콘")
     # label.pack(side='top')
