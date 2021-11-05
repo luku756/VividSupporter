@@ -26,10 +26,10 @@ class ButtonState(Enum):
     pressed = 0
     unpressed = 1
 
-unit_list = Units.get_unit_list()
+# unit_list = Units.get_unit_list()
 
-for a in Symbols:
-    print(a.value)
+# for a in Symbols:
+#     print(a.value)
 
 def create_gui():
 
@@ -64,7 +64,7 @@ def create_gui():
     # 심볼 클릭 이벤트. 아래에 디스플레이 되는 목록을 변경한다.
     # 버튼을 누르면 눌린 상태를 유지하고, 그 상태에서 다시 누르면 원상복구한다.
     def symbol_click(selected_symbol):
-        print(selected_symbol)
+        # print(selected_symbol)
         if symbol_buttons[selected_symbol]['state'] == ButtonState.unpressed:
             symbol_buttons[selected_symbol]['button']['background'] = 'gray'
             symbol_buttons[selected_symbol]['button'].config(relief=SUNKEN)  # 눌린 상태 유지
@@ -78,15 +78,17 @@ def create_gui():
 
     # 심볼과 해당 심볼 버튼 상태
     symbol_buttons = {}
-    # 이미지 정보는 변수를 유지하지 않으면 사라진다
+
+    # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
     symbol_images = {}
+    for s in Symbols:
+        img_path = f'resource\\symbols\\{s.value}.png'
+        symbol_images[s] = PhotoImage(file=img_path)
 
     # 심볼 목록 표시
     def display_symbols():
 
         for s in Symbols:
-            img_path = f'resource\\symbols\\{s.value}.png'
-            symbol_images[s] = PhotoImage(file=img_path)
 
             tag_new_btn = tkinter.Button(symbol_list_frame, overrelief="groove", image=symbol_images[s], text=s.value,
                                          command=partial(symbol_click, s))
@@ -96,19 +98,11 @@ def create_gui():
             # 관리할 상태 변수
             symbol_buttons[s] = {'button': tag_new_btn, 'state': ButtonState.unpressed}
 
+            # text 위젯에 추가
             symbol_list_window.configure(state="normal")
             symbol_list_window.window_create("insert", window=tag_new_btn, padx=10, pady=10)
             symbol_list_window.configure(state="disabled")
 
-            # 꽉차면 위치를 바꿔가며 채우기
-            # tag_new_btn.grid(row=grid_index_y, column=grid_index_x)
-            # # tag_new_btn.pack(side='top', fill="both", padx=10, pady=10)
-            # grid_index_x = grid_index_x + 1
-            # if grid_index_x == grid_x_max:
-            #     grid_index_x = 0
-            #     grid_index_y = grid_index_y + 1
-
-            # print(s.value)
 
     display_symbols()
 
@@ -118,15 +112,37 @@ def create_gui():
     character_list_frame.pack(side='top', fill="both", padx=10, pady=10)
 
     # 심볼 표시
-    character_list_window = tk.Text(character_list_frame, wrap="word", yscrollcommand=lambda *args: character_vsb.set(*args))
+    character_list_window = tk.Text(character_list_frame, wrap="word", bg='SystemButtonFace', yscrollcommand=lambda *args: character_vsb.set(*args))
     character_vsb = tk.Scrollbar(character_list_frame, command=character_list_window.yview)
     character_vsb.pack(side="right", fill="y")
     character_list_window.pack(side="left", fill="both", expand=True)
 
     # 현재 선택 상태에 맞는 캐릭터 목록을 출력한다.
     def display_right_characters():
-        print('a')
+        unit_list = Units.get_unit_list()
 
+        character_list_window.configure(state="normal")
+        character_list_window.delete("1.0", "end")
+        character_list_window.configure(state="disabled")
+
+        for unit in unit_list:
+            # 첫번째 심볼, 혹은 두번째 심볼이 클릭된 상태
+            if symbol_buttons[unit[2]]['state'] == ButtonState.pressed or symbol_buttons[unit[3]]['state'] == ButtonState.pressed:
+
+                tag_new_btn = tkinter.Button(character_list_frame, overrelief="groove", #image=symbol_images[s],
+                                             text=unit[0],
+                                             #command=partial(symbol_click, s)
+                                             )
+
+                Tooltip(tag_new_btn, text=str(unit))
+
+                # 관리할 상태 변수
+                # symbol_buttons[s] = {'button': tag_new_btn, 'state': ButtonState.unpressed}
+
+                # text 위젯에 추가
+                character_list_window.configure(state="normal")
+                character_list_window.window_create("insert", window=tag_new_btn, padx=10, pady=10)
+                character_list_window.configure(state="disabled")
 
 
     # 메인루프 시작
