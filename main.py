@@ -31,6 +31,15 @@ class ButtonState(Enum):
 # for a in Symbols:
 #     print(a.value)
 
+# 컴파일 시 리소스 가져오기
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 def create_gui():
 
     window = tkinter.Tk()
@@ -51,12 +60,14 @@ def create_gui():
     # window.geometry("800x710-2500+700")
     # window.resizable(False, False)
 
+    window.iconbitmap(resource_path('resource\\logo.ico'))
+    # window.iconphoto(False, tk.PhotoImage(file=resource_path('resource\\아멜리.jpg')))
 
     # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
     symbol_images = {}
     for s in Symbols:
         img_path = f'resource\\symbols\\{s.value}.png'
-        symbol_images[s] = PhotoImage(file=img_path)
+        symbol_images[s] = PhotoImage(file=resource_path(img_path))
 
     # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
     unit_images = {}
@@ -66,7 +77,7 @@ def create_gui():
 
         # Resizing image to fit on button
         # photoimage = PhotoImage(file=img_path).subsample(2, 2)
-        unit_images[unit[0]] = PhotoImage(file=img_path)
+        unit_images[unit[0]] = PhotoImage(file=resource_path(img_path))
 
 
     upper_frame = tkinter.Frame(window)
@@ -100,7 +111,7 @@ def create_gui():
         # 메뉴를 만들어 심볼 선택
         def create_menu(widget, unit_name):
             menu = tkinter.Menu(widget, tearoff=0)
-            print(widget['text'])
+            # print(widget['text'])
             if widget['text'] == '컬러랜덤':
                 for s in ColorSymbols:
                     menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget, unit_name))
