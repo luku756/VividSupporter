@@ -1,6 +1,6 @@
 from functools import partial
 
-from Units import Units, Symbols, Level
+from Units import Units, Symbols, Level, ColorSymbols , MarkSymbols
 
 import os
 from Tootip import Tooltip
@@ -68,6 +68,8 @@ def create_gui():
         # photoimage = PhotoImage(file=img_path).subsample(2, 2)
         unit_images[unit[0]] = PhotoImage(file=img_path)
 
+
+
     # 심볼 목록 표시
     symbol_list_frame = tkinter.LabelFrame(window, text="심볼 선택")
     symbol_list_frame.pack(side='top', fill="both", padx=10, pady=10)
@@ -77,6 +79,64 @@ def create_gui():
     symbol_vsb = tk.Scrollbar(symbol_list_frame, command=symbol_list_window.yview)
     symbol_vsb.pack(side="right", fill="y")
     symbol_list_window.pack(side="left", fill="both", expand=True)
+
+    def random_symbol_click(selected_symbol):
+        # print(selected_symbol)
+        if symbol_buttons[selected_symbol]['state'] == ButtonState.unpressed:
+            symbol_buttons[selected_symbol]['button']['background'] = 'gray'
+            symbol_buttons[selected_symbol]['button'].config(relief=SUNKEN)  # 눌린 상태 유지
+            symbol_buttons[selected_symbol]['state'] = ButtonState.pressed
+        else:
+            symbol_buttons[selected_symbol]['button'].config(relief=RAISED)  # 눌린 상태 해제
+            symbol_buttons[selected_symbol]['state'] = ButtonState.unpressed
+            symbol_buttons[selected_symbol]['button']['background'] = 'SystemButtonFace'
+        # 현재 ui 갱신
+        display_right_characters()
+
+
+    # 랜덤 유닛의 속성 선택
+    random_unit_select_symbol = tkinter.LabelFrame(window,  text="랜덤유닛 속성", width='5')
+    random_unit_select_symbol.pack(side="top")
+
+    # label = tkinter.Label(random_unit_select_symbol, text="궁정화가 지르콘")
+    # label.pack(side='top')
+
+    # 랜덤유닛의 옵션 설정 기능 추가
+    def add_random_unit(upper_widget, name):
+        def click_menu(clicked, select_type, btn):
+            print(clicked)
+            print(select_type)
+            btn.config(image=symbol_images[clicked.value])
+
+
+        def create_menu(widget):
+            menu = tkinter.Menu(widget, tearoff=0)
+            print(widget['text'])
+            if widget['text'] == '컬러랜덤':
+                for s in ColorSymbols:
+                    menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget))
+            else:
+                for s in MarkSymbols:
+                    menu.add_command(image=symbol_images[s.value], command=partial(click_menu, s, widget['text'], widget))
+
+            widget["menu"] = menu
+
+
+        te = tkinter.LabelFrame(upper_widget, text=name)
+
+        symbol_1 = tkinter.Menubutton(te, image=symbol_images[Symbols.random_color], text=Symbols.random_color.value,
+                                      relief="raised", direction="right")
+        symbol_1.pack(side="left")
+        create_menu(symbol_1)
+
+        symbol_2 = tkinter.Menubutton(te, image=symbol_images[Symbols.random_mark], text=Symbols.random_mark.value,
+                                      relief="raised", direction="right")
+        symbol_2.pack(side="right")
+        create_menu(symbol_2)
+        te.pack(side="top", padx=10, pady=10)
+
+    add_random_unit(random_unit_select_symbol, '궁정화가 지르콘')
+    add_random_unit(random_unit_select_symbol, '점성술사 래브라')
 
     # 심볼 클릭 이벤트. 아래에 디스플레이 되는 목록을 변경한다.
     # 버튼을 누르면 눌린 상태를 유지하고, 그 상태에서 다시 누르면 원상복구한다.
@@ -118,27 +178,11 @@ def create_gui():
     unit_list_frame = tkinter.LabelFrame(window, text="선택된 심볼의 유닛 목록")
     unit_list_frame.pack(side='top', fill="both", padx=10, pady=10)
 
-    unit_list_window = tk.Text(unit_list_frame, wrap="word", height='40',  bg='SystemButtonFace', yscrollcommand=lambda *args: unit_vsb.set(*args))
+    unit_list_window = tk.Text(unit_list_frame, wrap="word", height='40',
+                               bg='SystemButtonFace', yscrollcommand=lambda *args: unit_vsb.set(*args))
     unit_vsb = tk.Scrollbar(unit_list_frame, command=unit_list_window.yview)
     unit_vsb.pack(side="right", fill="y")
     unit_list_window.pack(side="left", fill="both", expand=True)
-
-
-    # 유닛 클릭 이벤트. 유닛 화면을 비활성화한다.
-    # 버튼을 누르면 눌린 상태를 유지하고, 그 상태에서 다시 누르면 원상복구한다.
-    def unit_click(selected_symbol):
-        print('as')
-        # print(selected_symbol)
-        # if symbol_buttons[selected_symbol]['state'] == ButtonState.unpressed:
-        #     symbol_buttons[selected_symbol]['button']['background'] = 'gray'
-        #     symbol_buttons[selected_symbol]['button'].config(relief=SUNKEN)  # 눌린 상태 유지
-        #     symbol_buttons[selected_symbol]['state'] = ButtonState.pressed
-        # else:
-        #     symbol_buttons[selected_symbol]['button'].config(relief=RAISED)  # 눌린 상태 해제
-        #     symbol_buttons[selected_symbol]['state'] = ButtonState.unpressed
-        #     symbol_buttons[selected_symbol]['button']['background'] = 'SystemButtonFace'
-        # 현재 ui 갱신
-        # display_right_characters()
 
     # 현재 선택 상태에 맞는 유닛 목록을 출력한다.
     def display_right_characters():
@@ -161,8 +205,8 @@ def create_gui():
                     color = 'gold'
 
                 # 전체 프레임
-                unit_frame = tkinter.Frame(unit_list_frame,  bg=color #, command=partial(unit_click, s)
-                                            )
+                unit_frame = tkinter.Frame(unit_list_frame,  bg=color) #, command=partial(unit_click, s)
+
 
                 # 패딩 크기, 사실상 테두리 크기
                 pad_size = 4

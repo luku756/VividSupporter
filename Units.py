@@ -1,5 +1,4 @@
 
-
 from enum import Enum
 
 class Symbols(Enum):
@@ -28,9 +27,36 @@ class Symbols(Enum):
     plum = '매화문장'
     shield = '방패'
     hanged = '매달린사람'
-
     random_mark = '마크랜덤'
 
+
+class ColorSymbols(Enum):
+    red = Symbols.red
+    blue = Symbols.blue
+    yellow = Symbols.yellow
+    purple = Symbols.purple
+    green = Symbols.green
+    pink = Symbols.pink
+    orange = Symbols.orange
+    white = Symbols.white
+    black = Symbols.black
+    brown = Symbols.brown
+
+
+class MarkSymbols(Enum):
+    sun = Symbols.sun
+    moon = Symbols.moon
+    star = Symbols.star
+    magician = Symbols.magician
+    justice = Symbols.justice
+    wheel = Symbols.wheel
+    chariot = Symbols.chariot
+    crown = Symbols.crown
+    tower = Symbols.tower
+    forest = Symbols.forest
+    plum = Symbols.plum
+    shield = Symbols.shield
+    hanged = Symbols.hanged
 
 class Level(Enum):
     bronze = '브론즈'
@@ -115,4 +141,3 @@ class Units:
     @staticmethod
     def get_symbol_list():
         return Symbols
-
