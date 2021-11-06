@@ -4,7 +4,7 @@
 스팀 게임 Vivid Knight (<https://store.steampowered.com/app/1569090/Vivid_Knight/>) 의 서포트 프로그램입니다.
 
 속성 심볼을 선택하면 해당 심볼을 지닌 유닛의 목록을 보여줍니다.
-(현재 - v 1.0.0 에서 아멜리만 지원)
+(현재 - v 1.1.0 에서 아멜리만 지원)
 
 [파일 다운로드](https://github.com/luku756/VividSupporter/raw/master/dist/%EB%B9%84%EB%B9%84%EB%93%9C%20%EB%82%98%EC%9D%B4%ED%8A%B8%20%EC%84%9C%ED%8F%AC%ED%84%B0.exe)
 
@@ -20,6 +20,12 @@
 ![예시3](https://user-images.githubusercontent.com/43954535/140516530-a8e2cd8f-1af9-4a08-b833-6641bfe63c6b.png)
 ![예시2](https://user-images.githubusercontent.com/43954535/140516526-f9cc47c9-06a3-4741-bc65-7b3aceffef49.PNG)
 
+# 업데이트 이력
 
+## 1.1.0
+
+상단에 새 게임, 선택 초기화 메뉴 추가
+새 게임 : 선택 상태, 랜덤유닛 속성 초기화
+선택 초기화 : 랜덤유닛은 유지하며 선택 상태만 초기화
 
 * 본 프로그램에서 사용된 모든 이미지의 저작권은 비비드 나이트 제작팀 (아소비즘) 측에 있습니다.
