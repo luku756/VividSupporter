@@ -55,13 +55,37 @@ def create_gui():
     window.after(1, lambda: window.focus_force())
     window.attributes('-topmost', 0)
 
-    window.title("비비드 나이트 도우미 by Redwing (v 1.0.0)")
+    window.title("비비드 나이트 도우미 by Redwing (v 1.1.0)")
     window.geometry("1100x800+500+100")
     # window.geometry("800x710-2500+700")
     # window.resizable(False, False)
 
     window.iconbitmap(resource_path('resource\\logo.ico'))
     # window.iconphoto(False, tk.PhotoImage(file=resource_path('resource\\아멜리.jpg')))
+
+    # 상단 메뉴 추가
+    menubar = tkinter.Menu(window)
+
+    # 초기화 메뉴 클릭
+    def click_clear_menu(menu):
+        for s in Symbols: # 모든 버튼이 안 눌린 상태로 변경
+            symbol_buttons[s]['button'].config(relief=RAISED)  # 눌린 상태 해제
+            symbol_buttons[s]['state'] = ButtonState.unpressed
+            symbol_buttons[s]['button']['background'] = 'SystemButtonFace'
+
+        if menu == 'new game':  # 랜덤유닛 선택지도 같이 초기화
+            # 선택 데이터 초기화
+            Units.reset_random_unit()
+            # 심볼 이미지 초기화
+            for u in Units.get_random_unit_list():
+                random_unit_selected_symbols[u[0]][0].config(image=symbol_images[Symbols.random_color])  # 이미지 변경
+                random_unit_selected_symbols[u[0]][1].config(image=symbol_images[Symbols.random_mark])  # 이미지 변경
+
+        display_right_units()  # 화면 갱신
+
+    menubar.add_cascade(label="새 게임", command=partial(click_clear_menu, 'new game'))
+    menubar.add_cascade(label="선택 초기화", command=partial(click_clear_menu, 'clear'))
+    window.config(menu=menubar)
 
     # 이미지 정보는 변수를 유지하지 않으면 사라진다. 그러니 미리 불러오기
     symbol_images = {}
@@ -101,6 +125,9 @@ def create_gui():
     # label = tkinter.Label(random_unit_select_symbol, text="궁정화가 지르콘")
     # label.pack(side='top')
 
+    # 랜덤 유닛 심볼 정보
+    random_unit_selected_symbols = {}
+
     # 랜덤유닛의 옵션 설정 기능 추가
     def add_random_unit(upper_widget, name):
         def click_menu(clicked, symbol_type, btn, unit_name):
@@ -121,7 +148,6 @@ def create_gui():
 
             widget["menu"] = menu
 
-
         te = tkinter.LabelFrame(upper_widget, text=name)
 
         symbol_1 = tkinter.Menubutton(te, image=symbol_images[Symbols.random_color], text=Symbols.random_color.value,
@@ -132,6 +158,10 @@ def create_gui():
         symbol_2 = tkinter.Menubutton(te, image=symbol_images[Symbols.random_mark], text=Symbols.random_mark.value,
                                       relief="raised", direction="right")
         symbol_2.pack(side="right")
+
+        # 심볼을 변수로 관리
+        random_unit_selected_symbols[name] = [symbol_1, symbol_2]
+
         create_menu(symbol_2, name)
         te.pack(side="top", padx=10, pady=10)
 

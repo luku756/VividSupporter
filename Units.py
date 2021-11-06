@@ -138,10 +138,12 @@ class Units:
         lists = []
         for unit in Units.unit_list:
             u = unit.copy()
-            if u[0] == Units.random_unit_list[0][0]:
-                u = Units.random_unit_list[0].copy()
-            elif u[0] == Units.random_unit_list[1][0]:
-                u = Units.random_unit_list[1].copy()
+
+            # 랜덤 유닛은 변경된 값을 반영할 것
+            for rand_unit in Units.random_unit_list:
+                if u[0] == rand_unit[0]:
+                    u = rand_unit.copy()
+
             # u.append(ButtonState.unpressed)
             lists.append(u)
 
@@ -150,6 +152,16 @@ class Units:
     @staticmethod
     def get_symbol_list():
         return Symbols
+
+    @staticmethod
+    def get_random_unit_list():
+        return Units.random_unit_list
+
+    @staticmethod
+    def reset_random_unit():
+        for unit in Units.random_unit_list:
+            unit[2] = Symbols.random_color
+            unit[3] = Symbols.random_mark
 
     @staticmethod
     def set_random_unit_state(unit_name, symbol_type, new_symbol):
